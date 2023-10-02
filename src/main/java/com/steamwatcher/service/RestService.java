@@ -2,6 +2,7 @@ package com.steamwatcher.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.steamwatcher.exceptions.RestException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,6 +25,7 @@ public class RestService {
 
     RestService(GoogleService googleService) {
         this.googleService = googleService;
+        MAPPER.registerModule(new JavaTimeModule());
     }
 
     public synchronized Response executeRequest(Request request) throws IOException {
@@ -69,7 +71,7 @@ public class RestService {
      *
      * @param response la risposta
      */
-    public void validateResponse(Response response) throws RestException {
+    public String validateResponse(Response response) throws RestException {
 
         // Verifica che lo status code della risposta sia 200 o 201
         if (!response.isSuccessful()) {
@@ -80,16 +82,19 @@ public class RestService {
         // Verifica che la risposta non sia vuota
         ResponseBody responseBody = response.body();
 
+        String bodyString = "";
         // controllo se c'è il body
         try {
             if (responseBody == null || responseBody.string().isBlank()) {
                 String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
                 throw new RestException(message);
             }
+            bodyString = responseBody.string();
         } catch (IOException e) {
             throw new RestException(e.getMessage());
         }
 
+        return bodyString;
     }
 
     /**
