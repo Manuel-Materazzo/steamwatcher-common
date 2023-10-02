@@ -1,4 +1,4 @@
-package com.steamwatcher.exceptions;
+package com.steamwatcher.utils;
 
 
 import org.quartz.JobExecutionException;

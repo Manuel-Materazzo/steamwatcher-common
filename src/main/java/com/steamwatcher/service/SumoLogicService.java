@@ -1,6 +1,6 @@
 package com.steamwatcher.service;
 
-import com.steamwatcher.exceptions.ExceptionUtils;
+import com.steamwatcher.utils.ExceptionUtils;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -20,13 +20,15 @@ import java.io.StringWriter;
 @Scope("singleton")
 public class SumoLogicService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SumoLogicService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SumoLogicService.class);
     private final RestService restService;
-    private static final String MICROSERVICE_NAME = "buff-batch";
     private static final String LOG_FORMAT = "%s | %s: %s";
 
     @Value("${csgotracker.aggregator.uri:}")
     private String uri;
+
+    @Value("${csgotracker.microservice-name:}")
+    private String microserviceName;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     @Autowired
@@ -37,38 +39,38 @@ public class SumoLogicService {
     public void info(String jobName, String workerName, String message, String trace) {
 
         String logMessage = String.format(LOG_FORMAT, jobName, workerName, message);
-        logger.info(logMessage);
-        logger.info(trace);
+        LOGGER.info(logMessage);
+        LOGGER.info(trace);
         sendLogs(jobName, workerName, message, trace, "info");
     }
 
     public void info(String jobName, String workerName, String message) {
 
         String logMessage = String.format(LOG_FORMAT, jobName, workerName, message);
-        logger.info(logMessage);
+        LOGGER.info(logMessage);
         sendLogs(jobName, workerName, message, "", "info");
     }
 
     public void warn(String jobName, String workerName, String message, String trace) {
 
         String logMessage = String.format(LOG_FORMAT, jobName, workerName, message);
-        logger.warn(logMessage);
-        logger.warn(trace);
+        LOGGER.warn(logMessage);
+        LOGGER.warn(trace);
         sendLogs(jobName, workerName, message, trace, "warning");
     }
 
     public void error(String jobName, String workerName, String message, String trace) {
 
         String logMessage = String.format(LOG_FORMAT, jobName, workerName, message);
-        logger.error(logMessage);
-        logger.error(trace);
+        LOGGER.error(logMessage);
+        LOGGER.error(trace);
         sendLogs(jobName, workerName, message, trace, "error");
     }
 
     public void error(String jobName, String workerName, String message, Exception exception) {
 
         String logMessage = String.format(LOG_FORMAT, jobName, workerName, message);
-        logger.error(logMessage);
+        LOGGER.error(logMessage);
 
         StringWriter sw = new StringWriter();
         exception.printStackTrace(new PrintWriter(sw));
@@ -76,7 +78,7 @@ public class SumoLogicService {
 
         String trace = String.format("%s %n %s", exception.getMessage(), exceptionString);
 
-        logger.error(trace);
+        LOGGER.error(trace);
 
         sendLogs(jobName, workerName, message, trace, "error");
     }
@@ -85,7 +87,7 @@ public class SumoLogicService {
         try {
 
             if (uri == null || uri.isBlank()) {
-                logger.error("Sumo Logic url is empty!");
+                LOGGER.error("Sumo Logic url is empty!");
                 return;
             }
 
@@ -105,7 +107,7 @@ public class SumoLogicService {
                     "\"worker\": \"%s\"," +
                     "\"message\": \"%s\"," +
                     "\"trace\": \"%s\"" +
-                    "} ", severity, MICROSERVICE_NAME, jobName, workerName, message, trace);
+                    "} ", severity, microserviceName, jobName, workerName, message, trace);
 
             Request request = new Request.Builder()
                     .url(uri)
@@ -116,13 +118,13 @@ public class SumoLogicService {
             Response response = restService.executeRequest(request);
 
             if (!response.isSuccessful()) {
-                logger.error("Error while sending logs to Sumo Logic!, server responded with {}", response.code());
+                LOGGER.error("Error while sending logs to Sumo Logic!, server responded with {}", response.code());
             }
 
             response.close();
 
         } catch (Exception e) {
-            ExceptionUtils.printError(e, "Error while sending logs to Sumo Logic!", logger);
+            ExceptionUtils.printError(e, "Error while sending logs to Sumo Logic!", LOGGER);
         }
     }
 

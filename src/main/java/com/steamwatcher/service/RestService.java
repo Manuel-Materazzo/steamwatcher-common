@@ -18,11 +18,23 @@ import java.net.http.HttpResponse;
 @Scope("singleton")
 public class RestService {
 
-    private static final OkHttpClient client = new OkHttpClient().newBuilder().build();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final GoogleService googleService;
+    private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    RestService(GoogleService googleService) {
+        this.googleService = googleService;
+    }
 
     public synchronized Response executeRequest(Request request) throws IOException {
-        return client.newCall(request).execute();
+        return CLIENT.newCall(request).execute();
+    }
+
+    public synchronized Response executeM2MRequest(Request request) throws IOException {
+        Request authenticatedRequest = request.newBuilder()
+                .addHeader("Authentication", "Bearer " + googleService.getToken())
+                .build();
+        return CLIENT.newCall(authenticatedRequest).execute();
     }
 
     /**
@@ -89,7 +101,7 @@ public class RestService {
     public String serialize(Object object) throws RestException {
         String serialized;
         try {
-            serialized = objectMapper.writeValueAsString(object);
+            serialized = MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             String message = String.format("Errore nel parsing del body della richiesta: %s", e.getMessage());
             throw new RestException(message);
@@ -106,7 +118,7 @@ public class RestService {
      */
     public <T> T deserialize(String response, Class<T> valueType) throws RestException {
         try {
-            return objectMapper.readValue(response, valueType);
+            return MAPPER.readValue(response, valueType);
         } catch (Exception e) {
             String message = String.format("Errore nel parsing del body della risposta: %s", e.getMessage());
             throw new RestException(message);
