@@ -1,43 +1,41 @@
 package com.steamwatcher.service;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.auth.oauth2.IdToken;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.steamwatcher.utils.FileReaderUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Scope("singleton")
 public class GoogleService {
 
-    private static Credential CREDENTIALS;
+    private ServiceAccountCredentials credentials;
 
     @Value("${csgotracker.m2m-auth-file:}")
-    private String authFilename;
+    public String authFilename;
 
     public String getToken() throws IOException {
 
         // se non ho credenziali loggo
-        if (CREDENTIALS == null) {
+        if (credentials == null) {
             initializeCredentials();
         }
 
         // se il login è scaduto refresho
-        if (CREDENTIALS.getExpiresInSeconds() < 0) {
-            boolean result = CREDENTIALS.refreshToken();
-            // se non riesco a refreshare, riloggo
-            if (!result) {
-                initializeCredentials();
-            }
-        }
+        credentials.refreshIfExpired();
 
-        return CREDENTIALS.getAccessToken();
+        // estraggo l'id token
+        String audience = "https://steamwatcher.com";
+        IdToken idToken = credentials.idTokenWithAudience(audience, new ArrayList<>());
+
+        return idToken.getTokenValue();
     }
 
     private void initializeCredentials() throws IOException {
@@ -45,9 +43,8 @@ public class GoogleService {
         InputStream in = FileReaderUtils.getInputstream(authFilename);
 
         // estraggo la lista di scope per gli spreadsheet
-        List<String> scopes = List.of("");
+        List<String> scopes = List.of("openid", "profile", "email");
         // genero le credenziali
-        CREDENTIALS = GoogleCredential.fromStream(in).createScoped(scopes);
-
+        credentials = (ServiceAccountCredentials) ServiceAccountCredentials.fromStream(in).createScoped(scopes);
     }
 }
