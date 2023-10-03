@@ -23,7 +23,7 @@ public class RestService {
     private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    RestService(GoogleService googleService) {
+    public RestService(GoogleService googleService) {
         this.googleService = googleService;
         MAPPER.registerModule(new JavaTimeModule());
     }
@@ -85,11 +85,15 @@ public class RestService {
         String bodyString = "";
         // controllo se c'è il body
         try {
-            if (responseBody == null || responseBody.string().isBlank()) {
+            if (responseBody == null) {
                 String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
                 throw new RestException(message);
             }
             bodyString = responseBody.string();
+            if (bodyString.isBlank()) {
+                String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
+                throw new RestException(message);
+            }
         } catch (IOException e) {
             throw new RestException(e.getMessage());
         }
