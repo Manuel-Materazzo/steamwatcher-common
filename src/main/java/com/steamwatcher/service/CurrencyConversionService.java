@@ -24,7 +24,7 @@ public class CurrencyConversionService {
     private Rates conversionRates;
     private Instant retrivalTime = Instant.now().minus(7, ChronoUnit.DAYS);
 
-    @Value("${fixer.api-key}")
+    @Value("${fixer.api-key:}")
     private String fixerApiKey;
 
     Logger logger = LoggerFactory.getLogger(CurrencyConversionService.class);

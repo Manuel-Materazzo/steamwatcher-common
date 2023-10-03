@@ -9,6 +9,7 @@ public class GeneralDataException extends RuntimeException  {
     public static final String UNABLE_TO_UPDATE_RECORD = "Impossibile aggiornare il record";
     public static final String UNABLE_TO_DELETE_RECORD = "Impossibile eliminare il record";
     public static final String UNABLE_TO_CREATE_RECORD = "Impossibile creare il record";
+    public static final String ONLY_M2M = "Allowed only with M2M comunication";
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
