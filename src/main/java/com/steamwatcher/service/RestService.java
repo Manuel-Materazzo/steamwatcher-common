@@ -96,6 +96,8 @@ public class RestService {
             }
         } catch (IOException e) {
             throw new RestException(e.getMessage());
+        } finally {
+            response.close();
         }
 
         return bodyString;
