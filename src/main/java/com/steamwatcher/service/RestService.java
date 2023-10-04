@@ -34,7 +34,7 @@ public class RestService {
 
     public synchronized Response executeM2MRequest(Request request) throws IOException {
         Request authenticatedRequest = request.newBuilder()
-                .addHeader("Authentication", "Bearer " + googleService.getToken())
+                .addHeader("Authorization", "Bearer " + googleService.getToken())
                 .build();
         return CLIENT.newCall(authenticatedRequest).execute();
     }
