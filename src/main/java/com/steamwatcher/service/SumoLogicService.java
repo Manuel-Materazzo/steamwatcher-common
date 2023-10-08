@@ -28,17 +28,17 @@ public class SumoLogicService {
     private static final String LOG_FORMAT = "%s | %s: %s";
 
     @Value("${csgotracker.aggregator.uri:}")
-    private String uri;
+    public String uri;
 
     @Value("${csgotracker.microservice-name:}")
-    private String microserviceName;
+    public String microserviceName;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private List<String> infoQueue = new ArrayList<>();
-    private List<String> warningQueue = new ArrayList<>();
+    private final List<String> infoQueue = new ArrayList<>();
+    private final List<String> warningQueue = new ArrayList<>();
 
     @Autowired
-    SumoLogicService(RestService restService) {
+    public SumoLogicService(RestService restService) {
         this.restService = restService;
     }
 
@@ -61,6 +61,7 @@ public class SumoLogicService {
             }
             // li mando tutti
             sendLogs(groupedLog.toString());
+            infoQueue.clear();
         }
 
     }
@@ -87,6 +88,7 @@ public class SumoLogicService {
             }
             // li mando tutti
             sendLogs(groupedLog.toString());
+            warningQueue.clear();
         }
     }
 
