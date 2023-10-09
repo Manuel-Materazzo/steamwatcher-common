@@ -25,7 +25,7 @@ import java.util.List;
         securedEnabled = true,
         jsr250Enabled = true)
 public class SecurityConfig {
-    private static final String[] SWAGGER_WHITELIST = {
+    private static final String[] WHITELIST = {
             "/v2/api-docs",
             "/v3/**",
             "/swagger-resources/**",
@@ -36,6 +36,8 @@ public class SecurityConfig {
             "/swagger-ui/index.html",
             "/swagger",
             "/webjars/**",
+            "/payment/paypal/captureorder/**",
+            "/API/payment/paypal/captureorder/**",
             "/authenticate"
     };
 
@@ -53,7 +55,7 @@ public class SecurityConfig {
                         handling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(SWAGGER_WHITELIST).permitAll()
+                        .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
