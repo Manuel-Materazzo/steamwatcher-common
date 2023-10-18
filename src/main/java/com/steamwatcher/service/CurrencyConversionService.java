@@ -56,6 +56,18 @@ public class CurrencyConversionService {
         return eur.multiply(eurToUsdRate);
     }
 
+    public BigDecimal usdToEur(BigDecimal usd) {
+
+        refreshRatesIfNeeded();
+
+        BigDecimal eurToUsdRate = conversionRates.getUsd();
+
+        BigDecimal eur = usd.divide(eurToUsdRate, 2, RoundingMode.HALF_UP);
+
+        return eur.multiply(eurToUsdRate);
+    }
+
+
     private void refreshRatesIfNeeded() {
         // if there is a conversion rate and it's newer than 1 hour, it's fine
         if (conversionRates != null ||
