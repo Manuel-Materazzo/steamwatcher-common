@@ -62,7 +62,14 @@ public class CurrencyConversionService {
 
         BigDecimal eurToUsdRate = conversionRates.getUsd();
 
-        BigDecimal eur = usd.divide(eurToUsdRate, 2, RoundingMode.HALF_UP);
+        return usd.divide(eurToUsdRate, 2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal eurToUsd(BigDecimal eur) {
+
+        refreshRatesIfNeeded();
+
+        BigDecimal eurToUsdRate = conversionRates.getUsd();
 
         return eur.multiply(eurToUsdRate);
     }
