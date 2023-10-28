@@ -70,6 +70,7 @@ public class SecurityConfig {
                 "http://localhost:4200",
                 "https://steamwatcher.com/",
                 "https://www.steamwatcher.com/",
+                "https://beta.steamwatcher.com/",
                 "https://csgo.steamwatcher.com/",
                 "https://cs2.steamwatcher.com/"
         ));
