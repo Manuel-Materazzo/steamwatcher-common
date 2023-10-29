@@ -37,7 +37,9 @@ public class SecurityConfig {
             "/swagger",
             "/webjars/**",
             "/payment/paypal/captureorder/**",
-            "/API/payment/paypal/captureorder/**",
+            "/payment/coinbase/captureorder",
+            "/users/payment/paypal/captureorder/**",
+            "/users/payment/coinbase/captureorder",
             "/authenticate"
     };
 
