@@ -35,6 +35,16 @@ public class CurrencyConversionService {
         this.restService = restService;
     }
 
+    /**
+     * Restituisce i ratei di conversione da euro a tutte le altre currency.
+     * ES: per ottenere un valore in USD, prendere il valore a db e moltiplicarlo per il valore di .getUsd()
+     * @return
+     */
+    public Rates getRates() {
+        refreshRatesIfNeeded();
+        return conversionRates;
+    }
+
     public BigDecimal cnyToEur(BigDecimal cny) {
 
         refreshRatesIfNeeded();
@@ -73,7 +83,6 @@ public class CurrencyConversionService {
 
         return eur.multiply(eurToUsdRate);
     }
-
 
     private void refreshRatesIfNeeded() {
         // if there is a conversion rate and it's newer than 1 hour, it's fine
