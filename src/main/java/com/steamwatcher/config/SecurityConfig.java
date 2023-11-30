@@ -26,21 +26,9 @@ import java.util.List;
         jsr250Enabled = true)
 public class SecurityConfig {
     private static final String[] WHITELIST = {
-            "/v2/api-docs",
-            "/v3/**",
-            "/swagger-resources/**",
-            "/configuration/ui/**",
-            "/configuration/security/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
-            "/swagger-ui/index.html",
-            "/swagger",
-            "/webjars/**",
             "/payment/paypal/captureorder/**",
             "/payment/coinbase/captureorder",
-            "/users/payment/paypal/captureorder/**",
-            "/users/payment/coinbase/captureorder",
-            "/authenticate"
+            "/auth/token/trade"
     };
 
     @Bean
