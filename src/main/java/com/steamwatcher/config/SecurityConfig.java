@@ -26,6 +26,9 @@ import java.util.List;
         jsr250Enabled = true)
 public class SecurityConfig {
     private static final String[] WHITELIST = {
+            "/payment/paypal/captureorder/**",
+            "/payment/coinbase/captureorder",
+            "/auth/token/trade",
             "/users/payment/paypal/captureorder/**",
             "/users/payment/coinbase/captureorder",
             "/users/auth/token/trade"
