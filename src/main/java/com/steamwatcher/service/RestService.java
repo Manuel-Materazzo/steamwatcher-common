@@ -72,19 +72,24 @@ public class RestService {
      * @param response la risposta
      */
     public String validateResponse(Response response) throws RestException {
-
-        // Verifica che lo status code della risposta sia 200 o 201
-        if (!response.isSuccessful()) {
-            String message = String.format("Il server remoto ha risposto con un codice di errore %s : %s", response.code(), response.body());
-            throw new RestException(message);
-        }
-
-        // Verifica che la risposta non sia vuota
-        ResponseBody responseBody = response.body();
-
         String bodyString = "";
-        // controllo se c'è il body
-        try {
+
+        try (response) {
+            // Verifica che lo status code della risposta sia 200 o 201
+            if (!response.isSuccessful()) {
+                String body = " ";
+                if (response.body() != null) {
+                    body = response.body().string();
+                }
+                String message = String.format("Il server remoto ha risposto con un codice di errore %s : %s", response.code(), body);
+                throw new RestException(message);
+            }
+
+            // Verifica che la risposta non sia vuota
+            ResponseBody responseBody = response.body();
+
+
+            // controllo se c'è il body
             if (responseBody == null) {
                 String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
                 throw new RestException(message);
@@ -96,8 +101,6 @@ public class RestService {
             }
         } catch (IOException e) {
             throw new RestException(e.getMessage());
-        } finally {
-            response.close();
         }
 
         return bodyString;
