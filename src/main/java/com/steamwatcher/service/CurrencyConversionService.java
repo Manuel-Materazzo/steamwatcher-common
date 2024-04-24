@@ -85,8 +85,8 @@ public class CurrencyConversionService {
     }
 
     private void refreshRatesIfNeeded() {
-        // if there is a conversion rate and it's newer than 1 hour, it's fine
-        if (conversionRates != null ||
+        // if there is a conversion rate and it's newer than 6 hours, it's fine
+        if (conversionRates != null &&
                 retrivalTime.isAfter(Instant.now().minus(6, ChronoUnit.HOURS))) {
             return;
         }

@@ -1,6 +1,7 @@
 package com.steamwatcher.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.steamwatcher.exceptions.RestException;
@@ -26,6 +27,7 @@ public class RestService {
     public RestService(GoogleService googleService) {
         this.googleService = googleService;
         MAPPER.registerModule(new JavaTimeModule());
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public synchronized Response executeRequest(Request request) throws IOException {
