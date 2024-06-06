@@ -24,6 +24,8 @@ public class RestService {
     private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private static final String EMPTY_BODY = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
+
     public RestService(GoogleService googleService) {
         this.googleService = googleService;
         MAPPER.registerModule(new JavaTimeModule());
@@ -63,8 +65,7 @@ public class RestService {
         // Verifica che la risposta non sia vuota
         String responseString = response.body();
         if (responseString == null || responseString.isBlank()) {
-            String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
-            throw new RestException(message);
+            throw new RestException(EMPTY_BODY);
         }
     }
 
@@ -93,13 +94,11 @@ public class RestService {
 
             // controllo se c'è il body
             if (responseBody == null) {
-                String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
-                throw new RestException(message);
+                throw new RestException(EMPTY_BODY);
             }
             bodyString = responseBody.string();
             if (bodyString.isBlank()) {
-                String message = "Il server remoto ha risposto con successo, ma ritornando un body vuoto";
-                throw new RestException(message);
+                throw new RestException(EMPTY_BODY);
             }
         } catch (IOException e) {
             throw new RestException(e.getMessage());

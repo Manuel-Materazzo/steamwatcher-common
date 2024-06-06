@@ -2,6 +2,7 @@ package com.steamwatcher.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @NoArgsConstructor
@@ -9,7 +10,7 @@ import java.time.Instant;
 @Setter
 @Builder
 @AllArgsConstructor
-public class SteamPriceMinMaxDTO {
+public class SteamPriceMinMaxDTO implements Serializable {
     private Instant date;
     private double minAmount;
     private double maxAmount;

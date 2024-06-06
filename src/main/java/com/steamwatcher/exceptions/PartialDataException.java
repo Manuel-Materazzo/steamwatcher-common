@@ -9,7 +9,7 @@ public class PartialDataException extends RuntimeException  {
 
     private HttpStatus httpStatus = HttpStatus.PARTIAL_CONTENT;
 
-    private List<SteamPriceMinMaxDTO> innerContent;
+    private final List<SteamPriceMinMaxDTO> innerContent;
 
     public HttpStatus getHttpStatus() {
         return httpStatus;
