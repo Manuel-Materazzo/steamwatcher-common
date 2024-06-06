@@ -18,7 +18,7 @@ public class GoogleService {
 
     private ServiceAccountCredentials credentials;
 
-    @Value("${csgotracker.m2m-auth-file:}")
+    @Value("${steamwatcher.m2m-auth-file:}")
     public String authFilename;
 
     public String getToken() throws IOException {

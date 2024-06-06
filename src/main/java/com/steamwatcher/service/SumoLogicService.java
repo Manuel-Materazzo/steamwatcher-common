@@ -27,10 +27,10 @@ public class SumoLogicService {
     private final RestService restService;
     private static final String LOG_FORMAT = "%s | %s: %s";
 
-    @Value("${csgotracker.aggregator.uri:}")
+    @Value("${steamwatcher.aggregator.uri:}")
     public String uri;
 
-    @Value("${csgotracker.microservice-name:}")
+    @Value("${steamwatcher.microservice-name:}")
     public String microserviceName;
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
